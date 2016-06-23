@@ -167,6 +167,7 @@ sylius:
         add_action: 'Add action'
         add_association: 'Add association'
         add_attribute: 'Add attribute'
+        add_attributes: 'Add attributes'
         add_channel: 'Add channel'
         add_choice: 'Add choice'
         add_coupon: 'Add coupon'
@@ -600,7 +601,6 @@ sylius:
         reset_button: Reset
         reset_password: 'Reset password'
         restore: Restore
-        restricted_zone: 'Restricted zone'
         retail_price: 'Retail price'
         return: Return
         revert: Revert
@@ -715,7 +715,7 @@ sylius:
         total_orders: 'Total orders'
         total_qty: 'Total Qty'
         total_registrations: 'Total registrations'
-        tracking_code: 'Tracking Code'
+        tracking_code: 'Tracking code'
         tracking_number: 'Tracking number'
         translations: Translations
         type: Type

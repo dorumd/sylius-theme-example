@@ -19,9 +19,6 @@
 {% block content %}
 <div class="page-header">
     <div class="actions-menu">
-        {% if not order.shippingState is constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
-            {{ buttons.edit(path('sylius_backend_order_update', {'id': order.id})) }}
-        {% endif %}
         {{ buttons.delete(path('sylius_backend_order_delete', {'id': order.id})) }}
         <a href="{{ path('sylius_backend_order_history', {'id': order.id}) }}" class="btn btn-info">
             <i class="glyphicon glyphicon-calendar"></i>
@@ -81,7 +78,8 @@
         <tr>
             <td class="picture text-center">
                 <a href="{{ path('sylius_backend_product_show', {'id': product.id}) }}" title="View {{ product.name|escape('html_attr') }} details.">
-                    <img src="{{ product.image ? product.image.path|imagine_filter('sylius_small') : 'http://placehold.it/90x60' }}" alt="" class="imgmedia-object" />
+                    {% set image = (product.variants|length > 0 and product.image) ? product.image.path|imagine_filter('sylius_medium') : 'http://placehold.it/90x60' %}
+                    <img src="{{ image }}" alt="" class="imgmedia-object" />
                 </a>
             </td>
             <td class="info">
@@ -94,17 +92,17 @@
                 <ul class="list-unstyled">
                     <li class="code"><strong>{{ 'sylius.ui.code'|trans }}</strong>: <code>{{ variant.code|default('SKU') }}</code></li>
                     {% for option in variant.options %}
-                    <li><strong>{{ option.presentation }}</strong>: {{ option.value  }}</li>
+                    <li><strong>{{ option.name }}</strong>: {{ option.value  }}</li>
                     {% endfor %}
                 </ul>
                 {% endif %}
             </td>
             <td class="quantity text-center">{{ item.quantity }}</td>
             <td class="unit-price text-center">
-                {{ item.unitPrice|sylius_price(order.currency) }}
+                {{ item.unitPrice|sylius_price(order.currencyCode) }}
             </td>
             <td class="total text-right">
-                {{ item.total|sylius_price(order.currency) }}
+                {{ item.total|sylius_price(order.currencyCode) }}
             </td>
         </tr>
         {% else %}
@@ -120,7 +118,7 @@
         <tr>
             <td class="active text-right" colspan="6">
                 <strong>{{ 'sylius.ui.items_total'|trans }}</strong>:
-                <span class="amount">{{ order.itemsTotal|sylius_price(order.currency) }}</span>
+                <span class="amount">{{ order.itemsTotal|sylius_price(order.currencyCode) }}</span>
             </td>
         </tr>
         <tr class="taxes">
@@ -130,7 +128,7 @@
                 {% if not allOrderAdjustments is empty %}
                     <ul class="list-unstyled">
                         {% for taxLabel, taxAmount in sylius_aggregate_adjustments(allOrderAdjustments) %}
-                            <li>{{ taxLabel }} {{ taxAmount|sylius_price(order.currency) }} </li>
+                            <li>{{ taxLabel }} {{ taxAmount|sylius_price(order.currencyCode) }} </li>
                         {% endfor %}
                     </ul>
                 {% else %}
@@ -139,7 +137,7 @@
             </td>
             <td class="text-right" colspan="3">
                 <strong>{{ 'sylius.ui.tax_total'|trans }}</strong>:
-                <span class="amount">{{ order.taxTotal|sylius_price(order.currency) }}</span>
+                <span class="amount">{{ order.taxTotal|sylius_price(order.currencyCode) }}</span>
             </td>
         </tr>
         <tr class="shipping-charges">
@@ -148,7 +146,7 @@
                 {% if not order.adjustments(shippingAdjustment).isEmpty() %}
                     <ul class="list-unstyled">
                         {% for adjustment in order.adjustments(shippingAdjustment) %}
-                            <li>{{ adjustment.label }} {{ adjustment.amount|sylius_price(order.currency) }} </li>
+                            <li>{{ adjustment.label }} {{ adjustment.amount|sylius_price(order.currencyCode) }} </li>
                         {% endfor %}
                     </ul>
                 {% else %}
@@ -157,7 +155,7 @@
             </td>
             <td class="text-right" colspan="3">
                 <strong>{{ 'sylius.ui.shipping_total'|trans }}</strong>:
-                <span class="amount">{{ order.shippingTotal|sylius_price(order.currency) }}</span>
+                <span class="amount">{{ order.shippingTotal|sylius_price(order.currencyCode) }}</span>
             </td>
         </tr>
         <tr class="promotion-discount">
@@ -166,7 +164,7 @@
                 {% if not order.adjustments(promotionAdjustment).isEmpty() %}
                     <ul class="list-unstyled">
                         {% for adjustment in order.adjustments(promotionAdjustment) %}
-                            <li>{{ adjustment.label }} {{ adjustment.amount|sylius_price(order.currency) }} </li>
+                            <li>{{ adjustment.label }} {{ adjustment.amount|sylius_price(order.currencyCode) }} </li>
                         {% endfor %}
                     </ul>
                 {% else %}
@@ -175,7 +173,7 @@
             </td>
             <td class="text-right" colspan="3">
                 <strong>{{ 'sylius.ui.promotion_total'|trans }}</strong>:
-                <span class="amount">{{ order.orderPromotionTotal|sylius_price(order.currency) }}</span>
+                <span class="amount">{{ order.orderPromotionTotal|sylius_price(order.currencyCode) }}</span>
             </td>
         </tr>
         {% if not order.adjustments().isEmpty() %}
@@ -191,7 +189,7 @@
         <tr>
             <td class="text-right active text-success lead" colspan="6">
                 <strong>{{ 'sylius.ui.total'|trans }}</strong>:
-                <span class="amount">{{ order.total|sylius_price(order.currency) }}</span>
+                <span class="amount">{{ order.total|sylius_price(order.currencyCode) }}</span>
             </td>
         </tr>
     </tfoot>

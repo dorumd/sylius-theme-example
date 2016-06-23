@@ -38,7 +38,7 @@ sylius:
         empty: El carrito está vacío
         summary:
             clear: Vaciar carrito
-            quantity: Cantidad
+            quantity: Cant.
         total_items: Total de articulos
     checkout:
         finalize:
@@ -52,7 +52,7 @@ sylius:
                 quantity: Cantidad
         forward: Siguiente
         security:
-            proceed_order: Proceder con su orden
+            proceed_order: Realizar pedido
         shipping:
             error: Lo sentimos, pero nuestra tienda no puede enviar productos al país que ha elegido
     confirmation:
@@ -141,6 +141,7 @@ sylius:
             ready: Listo
             returned: Devuelto
             shipped: Enviado
+            checkout: Completado
             pending: Pendiente
             onhold: En espera
             backordered: Pendientes de entrega
@@ -169,6 +170,7 @@ sylius:
         add_action: Añadir acción
         add_association: Añadir asociación
         add_attribute: Añadir atributo
+        add_attributes: Agregar atributos
         add_channel: Añadir canal
         add_choice: Añadir opción
         add_coupon: Añadir cupón
@@ -327,6 +329,7 @@ sylius:
         description: Descripción
         details: Detalles
         disable: Desactivar
+        discounted_unit_price: Precio unitario con descuento
         edit: Editar
         edit_association_type: Editar tipo de asociación
         edit_group: Editar grupo
@@ -601,7 +604,6 @@ sylius:
         reset_button: Restablecer
         reset_password: Restablecer contraseña
         restore: Recuperar
-        restricted_zone: Zona restringida
         retail_price: Precio
         return: Devolver
         revert: Revertir
@@ -716,7 +718,6 @@ sylius:
         total_orders: Pedidos
         total_qty: Cant total
         total_registrations: Usuarios
-        tracking_code: Código de seguimiento
         tracking_number: Número de seguimiento
         translations: Traducciones
         type: Tipo

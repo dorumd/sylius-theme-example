@@ -15,7 +15,8 @@
 <div class="row">
     <div class="col-md-3">
         <a href="{{ path(product) }}" class="thumbnail">
-            <img src="{{ product.image ? product.image.path|imagine_filter('sylius_medium') : 'http://placehold.it/200x200' }}" alt="{{ product.name }}" />
+            {% set image = (product.variants|length > 0 and product.image) ? product.image.path|imagine_filter('sylius_medium') : 'http://placehold.it/200x200' %}
+            <img src="{{ image }}" alt="{{ product.name }}" />
         </a>
     </div>
     <div class="col-md-9">
@@ -26,16 +27,6 @@
         {% endif %}
     </div>
 </div>
-{% if product.images|length > 0 %}
-<hr>
-<div id="gallery">
-    {% for image in product.images %}
-        <a href="{{ image.path|imagine_filter('sylius_large') }}" title="{{ product.name }}">
-            <img class="img-rounded" src="{{ image.path|imagine_filter('sylius_small') }}" alt="{{ product.name }}" />
-        </a>
-    {% endfor %}
-</div>
-{% endif %}
 <hr>
 <div class="row">
     <div class="col-md-6">
@@ -81,14 +72,14 @@
                     {% for variant in product.variants if variant.available %}
                     <tr>
                         <td>
-                            {% if variant.presentation is empty %}
+                            {% if variant.name is empty %}
                             <ul class="unstyled">
                                 {% for option in variant.options %}
-                                <li><strong>{{ option.presentation }}</strong>: {{ option.value }}</li>
+                                <li><strong>{{ option.name }}</strong>: {{ option.value }}</li>
                                 {% endfor %}
                             </ul>
                             {% else %}
-                                {{ variant.presentation }}
+                                {{ variant.name }}
                             {% endif %}
                         </td>
                         <td>
@@ -96,7 +87,11 @@
                         </td>
                         <td>
                         {% if sylius_inventory_is_available(variant) %}
-                            {{ form_widget(form.variant[loop.index0]) }}
+                            {% if product.variants|length == 1 %}
+                                {{ form_widget(form.variant[loop.index0], {'attr': {'checked': 'checked'}}) }}
+                            {% else %}
+                                {{ form_widget(form.variant[loop.index0]) }}
+                            {% endif %}
                         {% else %}
                             <span class="label label-warning">{{ 'sylius.ui.out_of_stock'|trans }}</span>
                         {% endif %}
@@ -113,25 +108,21 @@
         {% else %}
             <h4>
                 <span class="pull-right">
-                   {{ sylius_display_price(product.masterVariant) }}
+                   {{ sylius_display_price(product.firstVariant) }}
                 </span>
                 {{ 'sylius.ui.price'|trans }}
             </h4>
         {% endif %}
     </div>
     <div class="col-md-6 pull-right">
-        {% if not product.hasVariants and not sylius_inventory_is_available(product.masterVariant) %}
+        {% if not product.hasVariants and not sylius_inventory_is_available(product.firstVariant) %}
             <span class="label label-warning">{{ 'sylius.ui.out_of_stock'|trans }}</span>
         {% else %}
             {{ form_row(form.quantity, {'attr': {'class': 'center-text'}, 'empty_value': '1'}) }}
             {{ form_widget(form._token) }}
             <br>
             <br>
-            {% if sylius_is_restricted(product) %}
-            <button disabled="disabled" class="btn btn-success btn-lg btn-block"><i class="icon-shopping-cart icon-white icon-large"></i> {{ 'sylius.ui.not_available_in_your_country'|trans }}</button>
-            {% else %}
-                <button type="submit" class="btn btn-success btn-lg btn-block"><i class="icon-shopping-cart icon-white icon-large"></i> {{ 'sylius.ui.add_to_cart'|trans }}</button>
-            {% endif %}
+            <button type="submit" class="btn btn-success btn-lg btn-block"><i class="icon-shopping-cart icon-white icon-large"></i> {{ 'sylius.ui.add_to_cart'|trans }}</button>
         {% endif %}
     </div>
 </form>
