@@ -1,0 +1,10 @@
+{
+    "name": "vendor/sylius-theme-example",
+    "type": "sylius-theme",
+    "description": "Sylius Theme Example",
+    "extra": {
+        "sylius-theme": {
+            "description": "Example Theme"
+        }
+    }
+}
